@@ -6,7 +6,7 @@
     "description": "API para gerenciar usuários e streaks diários."
   },
   "servers": [
-    { "url": "http://localhost:5432", "description": "Local" }
+    { "url": "/", "description": "Current host" }
   ],
   "tags": [
     {"name": "users", "description": "Operações de Usuários"},
