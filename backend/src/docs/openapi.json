@@ -1,0 +1,126 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Daily Streaker API",
+    "version": "1.0.0",
+    "description": "API para gerenciar usuários e streaks diários."
+  },
+  "servers": [
+    { "url": "http://localhost:5432", "description": "Local" }
+  ],
+  "tags": [
+    {"name": "users", "description": "Operações de Usuários"},
+    {"name": "streaks", "description": "Operações de Streaks"}
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health check",
+        "responses": {
+          "200": {"description": "OK"}
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Listar usuários",
+        "responses": {
+          "200": {"description": "Lista de usuários"}
+        }
+      },
+      "post": {
+        "tags": ["users"],
+        "summary": "Criar usuário",
+        "requestBody": {
+          "required": true,
+          "content": {"application/json": {"schema": {"type": "object", "required": ["username"], "properties": {"username": {"type": "string"}}}}}
+        },
+        "responses": {
+          "201": {"description": "Usuário criado"},
+          "400": {"description": "Dados inválidos"}
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": ["users"],
+        "summary": "Obter usuário",
+        "parameters": [
+          {"name": "id", "in": "path", "required": true, "schema": {"type": "integer"}}
+        ],
+        "responses": {
+          "200": {"description": "Usuário"},
+          "404": {"description": "Não encontrado"}
+        }
+      }
+    },
+    "/streaks": {
+      "post": {
+        "tags": ["streaks"],
+        "summary": "Criar streak",
+        "requestBody": {
+          "required": true,
+          "content": {"application/json": {"schema": {"type": "object", "required": ["userId", "title"], "properties": {"userId": {"type": "integer"}, "title": {"type": "string"}}}}}
+        },
+        "responses": {
+          "201": {"description": "Streak criado"},
+          "400": {"description": "Dados inválidos"}
+        }
+      }
+    },
+    "/users/{userId}/streaks": {
+      "get": {
+        "tags": ["streaks"],
+        "summary": "Listar streaks do usuário",
+        "parameters": [
+          {"name": "userId", "in": "path", "required": true, "schema": {"type": "integer"}}
+        ],
+        "responses": {
+          "200": {"description": "Lista de streaks"}
+        }
+      }
+    },
+    "/streaks/{id}": {
+      "get": {
+        "tags": ["streaks"],
+        "summary": "Detalhar streak",
+        "parameters": [
+          {"name": "id", "in": "path", "required": true, "schema": {"type": "integer"}}
+        ],
+        "responses": {
+          "200": {"description": "Streak"},
+          "404": {"description": "Não encontrado"}
+        }
+      }
+    },
+    "/streaks/{id}/log": {
+      "post": {
+        "tags": ["streaks"],
+        "summary": "Registrar automaticamente o dia de hoje no streak",
+        "parameters": [
+          {"name": "id", "in": "path", "required": true, "schema": {"type": "integer"}}
+        ],
+        "responses": {
+          "200": {"description": "Streak atualizado"},
+          "400": {"description": "ID inválido"},
+          "404": {"description": "Não encontrado"}
+        }
+      }
+    },
+    "/streaks/{id}/log/{date}": {
+      "delete": {
+        "tags": ["streaks"],
+        "summary": "Remover log de data específica",
+        "parameters": [
+          {"name": "id", "in": "path", "required": true, "schema": {"type": "integer"}},
+          {"name": "date", "in": "path", "required": true, "schema": {"type": "string", "format": "date"}}
+        ],
+        "responses": {
+          "200": {"description": "Streak atualizado"},
+          "404": {"description": "Não encontrado"}
+        }
+      }
+    }
+  }
+}

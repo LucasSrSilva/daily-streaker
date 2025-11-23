@@ -1,0 +1,18 @@
+
+services:
+  db:
+    image: postgres:17
+    container_name: daily-streaker-db
+    environment:
+      POSTGRES_USER: daily_user
+      POSTGRES_PASSWORD: change_me
+      POSTGRES_DB: daily_streaker
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ./backend/db/init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "5432:5432"
+
+volumes:
+  db-data:
+    name: daily_streaker_db_data

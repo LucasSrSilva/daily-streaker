@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int          @id @default(autoincrement())
+  username    String       @unique
+  createdAt   DateTime     @default(now()) @map("created_at")
+  streakItems StreakItem[]
+  @@map("users")
+}
+
+model StreakItem {
+  id        Int         @id @default(autoincrement())
+  userId    Int         @map("user_id")
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  createdAt DateTime    @default(now()) @map("created_at")
+  logs      StreakLog[]
+  @@map("streak_items")
+}
+
+model StreakLog {
+  id           Int        @id @default(autoincrement())
+  streakItemId Int        @map("streak_item_id")
+  streakItem   StreakItem @relation(fields: [streakItemId], references: [id], onDelete: Cascade)
+  logDate      DateTime   @map("log_date")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  @@unique([streakItemId, logDate])
+  @@map("streak_logs")
+}
